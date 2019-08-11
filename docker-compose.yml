@@ -1,0 +1,16 @@
+version: '2.1'
+
+services:
+  # api-battleship:
+  #   image: api-battleship
+  #   build: .
+  #   environment:
+  #     NODE_ENV: development
+  #   ports:
+  #     - 3000:3000
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"

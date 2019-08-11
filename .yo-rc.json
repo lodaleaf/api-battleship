@@ -1,0 +1,7 @@
+{
+  "generator-rest": {
+    "srcDir": "https://github.com/lodaleaf/api-battleship",
+    "apiDir": "/src",
+    "authMethods": []
+  }
+}
