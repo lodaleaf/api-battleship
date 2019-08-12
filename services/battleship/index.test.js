@@ -138,7 +138,7 @@ describe('getUnitSize', () => {
     expect(getUnitSize(SHIP_TYPE.CRUISER)).toEqual(3)
   })
 
-  it('should return 2 for battleship', () => {
+  it('should return 2 for destroyer', () => {
     expect(getUnitSize(SHIP_TYPE.DESTROYER)).toEqual(2)
   })
 

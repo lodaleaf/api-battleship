@@ -49,7 +49,7 @@ export const isOccupied = (ocean, coordinateX, coordinateY) => {
   return _.some(nearbyOffset, (offset) => {
     const nearbyCoordinateX = getSaftyCoodinate(offset[0] + coordinateX)
     const nearbyCoordinateY = getSaftyCoodinate(offset[1] + coordinateY)
-    return ocean[nearbyCoordinateY][nearbyCoordinateX] !== undefined
+    return !_.isNil(ocean[nearbyCoordinateY][nearbyCoordinateX])
   })
 }
 
