@@ -1,0 +1,14 @@
+import mongoose from '../services/mongoose'
+
+const oceanSchema = new mongoose.Schema({
+  attack_history: [{ coordinateX: Number, coordinateY: Number, date: Date }],
+  defender_history: [{ shipType: String, shipDirection: String, coordinateX: Number, coordinateY: Number, date: Date }],
+  ocean_data: Object,
+  active: Boolean
+})
+
+oceanSchema.statics.findActive = function () {
+  return this.findOne({ active: true })
+}
+
+module.exports = mongoose.model('ocean', oceanSchema)
