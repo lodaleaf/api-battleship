@@ -1,4 +1,4 @@
-import { attack as attackService, isReadyToAttack, getOrCreateActiveOcean } from '../services/battleship'
+import { attack as attackService, getOrCreateActiveOcean } from '../services/battleship'
 
 export const attack = async (req, res) => {
   try {
@@ -8,6 +8,10 @@ export const attack = async (req, res) => {
     const activeOcean = await getOrCreateActiveOcean()
     if (!activeOcean.ready_to_attack) {
       throw (new Error('Please place all ships'))
+    }
+
+    if (activeOcean.tries === 0) {
+      throw (new Error('You Lost'))
     }
     const attackStatus = await attackService(coordinateX, coordinateY)
     res.send(attackStatus)

@@ -149,6 +149,32 @@ describe('controllers', () => {
       expect(response.text).toEqual('HIT')
     })
 
+    it('should return WIN', async () => {
+      await prepareBattleField()
+      const attackBody = {
+        coordinateX: 0,
+        coordinateY: 0
+      }
+      const response = await attack(attackBody)
+      expect(response.text).toEqual('WIN')
+    })
+
+    it('should return LOST', async () => {
+      await prepareBattleField()
+      const attackBody = {
+        coordinateX: 0,
+        coordinateY: 0
+      }
+
+      let response
+      let i = 0
+      while (i < 51) {
+        response = await attack(attackBody)
+        i++
+      }
+      expect(response.text).toEqual('You Lost')
+    })
+
     it('should return SANK', async () => {
       await prepareBattleField()
       await attack({

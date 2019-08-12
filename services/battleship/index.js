@@ -27,7 +27,8 @@ export const createActiveOcean = async () => {
   let newOcean = new OceanModel({
     ocean_data: newOceanData,
     active: true,
-    ready_to_attack: false
+    ready_to_attack: false,
+    tries: 50
   })
   await newOcean.save()
   return newOcean
@@ -139,6 +140,7 @@ export const attack = async (coordinateX, coordinateY) => {
     }
   }
   activeOcrean.ocean_data = oceanData
+  activeOcrean.tries--
   await activeOcrean.save()
   return attackStatus
 }

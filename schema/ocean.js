@@ -5,7 +5,8 @@ const oceanSchema = new mongoose.Schema({
   defender_history: [{ shipType: String, shipDirection: String, coordinateX: Number, coordinateY: Number, date: Date }],
   ocean_data: Object,
   ready_to_attack: Boolean,
-  active: Boolean
+  active: Boolean,
+  tries: Number
 })
 
 oceanSchema.statics.findActive = function () {
