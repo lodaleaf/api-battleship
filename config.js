@@ -34,15 +34,7 @@ const config = {
       }
     }
   },
-  test: {
-    port: process.env.PORT || 8888,
-    mongo: {
-      uri: 'mongodb://localhost:27017/api-battleship-test',
-      options: {
-        debug: true
-      }
-    }
-  },
+  test: {},
   development: {
     mongo: {
       uri: 'mongodb://localhost/api-battleship-dev',

@@ -1,5 +1,4 @@
-import OceanModel from '../schema/ocean'
-import { putShip } from '../services/battleship'
+import { putShip, getOrCreateActiveOcean } from '../services/battleship'
 
 export const placeShip = async (req, res) => {
   try {
@@ -8,7 +7,7 @@ export const placeShip = async (req, res) => {
     const coordinateX = req.body.coordinateX
     const coordinateY = req.body.coordinateY
 
-    let activeOcean = await OceanModel.findActive()
+    let activeOcean = await getOrCreateActiveOcean()
     activeOcean.ocean_data = putShip(activeOcean.ocean_data, shipType, coordinateX, coordinateY, shipDirection)
     await activeOcean.save()
     return res.send('Placed')

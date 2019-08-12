@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import OceanModel from '../../schema/ocean'
 
 export const initOcean = () => {
   let ocean = Array.from(
@@ -7,12 +8,27 @@ export const initOcean = () => {
   return ocean
 }
 
-export const resetGame = () => {
-
+export const resetOcean = async () => {
+  await OceanModel.deactiveAll()
 }
 
-export const getOcean = () => {
+export const getOrCreateActiveOcean = async () => {
+  let activeOcean = await OceanModel.findActive()
 
+  if (_.isNil(activeOcean)) {
+    activeOcean = await createActiveOcean()
+  }
+  return activeOcean
+}
+
+export const createActiveOcean = async () => {
+  let newOceanData = initOcean()
+  let newOcean = new OceanModel({
+    ocean_data: newOceanData,
+    active: true
+  })
+  await newOcean.save()
+  return newOcean
 }
 
 export const getUnitSize = (shipType) => {

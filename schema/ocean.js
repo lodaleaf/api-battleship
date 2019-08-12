@@ -11,4 +11,8 @@ oceanSchema.statics.findActive = function () {
   return this.findOne({ active: true })
 }
 
+oceanSchema.statics.deactiveAll = function () {
+  return this.updateMany({ active: true }, { active: false })
+}
+
 module.exports = mongoose.model('ocean', oceanSchema)
