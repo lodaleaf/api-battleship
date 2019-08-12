@@ -1,4 +1,4 @@
-import { initOcean, putShip, isOccupied, getUnitSize, isSank } from './index'
+import { initOcean, putShip, isOccupied, getUnitSize, isSank, isReadyToAttack } from './index'
 import { SHIP_DIRECTION, SHIP_TYPE } from '../../utils/constants'
 
 describe('initOcean', () => {
@@ -20,37 +20,37 @@ describe('putShip', () => {
     let shipType = SHIP_TYPE.SUBMARINE
     let shipDirection = SHIP_DIRECTION.HORIZONTAL
 
-    let result = putShip(emptyOcean, shipType, 0, 0, shipDirection)
-    expect(result[0][0]).toEqual(shipType)
+    let result = putShip(emptyOcean, shipType, 0, 0, shipDirection, 1)
+    expect(result[0][0]).toEqual(shipType + '_' + 1)
   })
 
   it('should be able to put ship horizontally', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.HORIZONTAL
 
     let result = putShip(emptyOcean, shipType, 0, 0, shipDirection)
-    expect(result[0][0]).toEqual(shipType)
-    expect(result[0][1]).toEqual(shipType)
-    expect(result[0][2]).toEqual(shipType)
-    expect(result[0][3]).toEqual(shipType)
+    expect(result[0][0]).toEqual(shipType + '_' + 1)
+    expect(result[0][1]).toEqual(shipType + '_' + 1)
+    expect(result[0][2]).toEqual(shipType + '_' + 1)
+    expect(result[0][3]).toEqual(shipType + '_' + 1)
   })
 
   it('should be able to put ship vertically', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let result = putShip(emptyOcean, shipType, 0, 0, shipDirection)
-    expect(result[0][0]).toEqual(shipType)
-    expect(result[1][0]).toEqual(shipType)
-    expect(result[2][0]).toEqual(shipType)
-    expect(result[3][0]).toEqual(shipType)
+    expect(result[0][0]).toEqual(shipType + '_' + 1)
+    expect(result[1][0]).toEqual(shipType + '_' + 1)
+    expect(result[2][0]).toEqual(shipType + '_' + 1)
+    expect(result[3][0]).toEqual(shipType + '_' + 1)
   })
 
   it('should return error because the location already has ship', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
@@ -61,7 +61,7 @@ describe('putShip', () => {
 
   it('should return error because the location is too near a ship', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
@@ -72,7 +72,7 @@ describe('putShip', () => {
 
   it('should return error because there is no space in vertical', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     expect(() => {
@@ -82,7 +82,7 @@ describe('putShip', () => {
 
   it('should return error because there is no space in horizontal', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.HORIZONTAL
 
     expect(() => {
@@ -94,7 +94,7 @@ describe('putShip', () => {
 describe('isOccupied', () => {
   it('should return true', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
@@ -103,7 +103,7 @@ describe('isOccupied', () => {
 
   it('should return true', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
@@ -112,7 +112,7 @@ describe('isOccupied', () => {
 
   it('should return false', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
@@ -121,7 +121,7 @@ describe('isOccupied', () => {
 
   it('should return false', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
@@ -131,7 +131,7 @@ describe('isOccupied', () => {
 
 describe('getUnitSize', () => {
   it('should return 4 for battleship', () => {
-    expect(getUnitSize(SHIP_TYPE.BATTLE_SHIP)).toEqual(4)
+    expect(getUnitSize(SHIP_TYPE.BATTLESHIP)).toEqual(4)
   })
 
   it('should return 3 for cruiser', () => {
@@ -150,15 +150,49 @@ describe('getUnitSize', () => {
 describe('isSank', () => {
   it('should return false', () => {
     let emptyOcean = initOcean()
-    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipType = SHIP_TYPE.BATTLESHIP
     let shipDirection = SHIP_DIRECTION.VERTICAL
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
-    expect(isSank(oneShipOcean, shipType)).toBeFalsy()
+    expect(isSank(oneShipOcean, shipType, 1)).toBeFalsy()
   })
 
   it('should return true', () => {
     let emptyOcean = initOcean()
-    expect(isSank(emptyOcean, SHIP_TYPE.BATTLE_SHIP)).toBeTruthy()
+    expect(isSank(emptyOcean, SHIP_TYPE.BATTLESHIP, 1)).toBeTruthy()
   })
+})
+
+describe('isReadyToAttack', () => {
+  it('should return true', () => {
+    const ocean = [
+      SHIP_TYPE.BATTLESHIP + '_' + 1,
+      SHIP_TYPE.CRUISER + '_' + 1,
+      SHIP_TYPE.CRUISER + '_' + 2,
+      SHIP_TYPE.DESTROYER + '_' + 1,
+      SHIP_TYPE.DESTROYER + '_' + 2,
+      SHIP_TYPE.DESTROYER + '_' + 3,
+      SHIP_TYPE.SUBMARINE + '_' + 1,
+      SHIP_TYPE.SUBMARINE + '_' + 2,
+      SHIP_TYPE.SUBMARINE + '_' + 3,
+      SHIP_TYPE.SUBMARINE + '_' + 4
+    ]
+    expect(isReadyToAttack(ocean)).toBeTruthy()
+  })
+
+  it('should return false', () => {
+    const ocean = [
+      SHIP_TYPE.BATTLESHIP + '_' + 1,
+      SHIP_TYPE.CRUISER + '_' + 1,
+      SHIP_TYPE.CRUISER + '_' + 2,
+      SHIP_TYPE.DESTROYER + '_' + 1,
+      SHIP_TYPE.DESTROYER + '_' + 2,
+      SHIP_TYPE.DESTROYER + '_' + 3,
+      SHIP_TYPE.SUBMARINE + '_' + 1,
+      SHIP_TYPE.SUBMARINE + '_' + 2,
+      SHIP_TYPE.SUBMARINE + '_' + 3
+    ]
+    expect(isReadyToAttack(ocean)).toBeFalsy()
+  })
+
 })

@@ -19,7 +19,7 @@ describe('controllers', () => {
   describe('place-ship controller', () => {
     it('should succeed place a ship', async () => {
       const reqBody = {
-        shipType: SHIP_TYPE.BATTLE_SHIP,
+        shipType: SHIP_TYPE.BATTLESHIP,
         shipDirection: SHIP_DIRECTION.HORIZONTAL,
         coordinateX: 0,
         coordinateY: 0
@@ -31,7 +31,7 @@ describe('controllers', () => {
 
     it('should return bad request', async () => {
       const reqBody = {
-        shipType: SHIP_TYPE.BATTLE_SHIP,
+        shipType: SHIP_TYPE.BATTLESHIP,
         shipDirection: SHIP_DIRECTION.HORIZONTAL,
         coordinateX: 0,
         coordinateY: 0
@@ -47,7 +47,7 @@ describe('controllers', () => {
   describe('resetGame', () => {
     it('should clear ocean data and create new ocean', async () => {
       const reqBody = {
-        shipType: SHIP_TYPE.BATTLE_SHIP,
+        shipType: SHIP_TYPE.BATTLESHIP,
         shipDirection: SHIP_DIRECTION.HORIZONTAL,
         coordinateX: 0,
         coordinateY: 0
@@ -63,7 +63,7 @@ describe('controllers', () => {
   describe('attack', () => {
     it('should return HIT', async () => {
       const placeShipBody = {
-        shipType: SHIP_TYPE.BATTLE_SHIP,
+        shipType: SHIP_TYPE.BATTLESHIP,
         shipDirection: SHIP_DIRECTION.HORIZONTAL,
         coordinateX: 0,
         coordinateY: 0
@@ -79,9 +79,9 @@ describe('controllers', () => {
       expect(response.text).toEqual('HIT')
     })
 
-    it('should return HIT', async () => {
+    it('should return SANK', async () => {
       const placeShipBody = {
-        shipType: SHIP_TYPE.BATTLE_SHIP,
+        shipType: SHIP_TYPE.BATTLESHIP,
         shipDirection: SHIP_DIRECTION.HORIZONTAL,
         coordinateX: 0,
         coordinateY: 0

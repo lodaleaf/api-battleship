@@ -34,7 +34,7 @@ export const createActiveOcean = async () => {
 
 export const getUnitSize = (shipType) => {
   switch (shipType) {
-    case SHIP_TYPE.BATTLE_SHIP:
+    case SHIP_TYPE.BATTLESHIP:
       return 4
     case SHIP_TYPE.CRUISER:
       return 3
@@ -70,7 +70,7 @@ export const isOccupied = (ocean, coordinateX, coordinateY) => {
   })
 }
 
-export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection) => {
+export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection, shipNumber = 1) => {
   const beforeAddedOcean = _.cloneDeep(ocean)
   const afterAddedOcean = _.cloneDeep(ocean)
   const unitSize = getUnitSize(shipType)
@@ -91,7 +91,7 @@ export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection
       throw (new Error('This location is occupied'))
     }
 
-    afterAddedOcean[toPutCoordinateY][toPutCoordinateX] = shipType
+    afterAddedOcean[toPutCoordinateY][toPutCoordinateX] = shipType + '_' + shipNumber
   }
   return afterAddedOcean
 }
@@ -101,11 +101,12 @@ export const attack = async (coordinateX, coordinateY) => {
   let attackStatus = ''
   const oceanData = _.cloneDeep(activeOcrean.ocean_data)
   if (!_.isNil(oceanData[coordinateY][coordinateX])) {
-    let shipType = oceanData[coordinateY][coordinateX]
+    let shipType = oceanData[coordinateY][coordinateX].split('_')[0]
+    let shipNumber = oceanData[coordinateY][coordinateX].split('_')[1]
     oceanData[coordinateY][coordinateX] = STATE.HIT
     attackStatus = STATE.HIT
 
-    if (isSank(oceanData, shipType)) {
+    if (isSank(oceanData, shipType, shipNumber)) {
       attackStatus = STATE.SANK
     }
   }
@@ -114,6 +115,26 @@ export const attack = async (coordinateX, coordinateY) => {
   return attackStatus
 }
 
-export const isSank = (ocean, shipType) => (
-  _.flatten(ocean).indexOf(shipType) === -1
+export const isSank = (ocean, shipType, shipNumber) => (
+  _.flatten(ocean).indexOf(shipType + '_' + shipNumber) === -1
+)
+
+export const isReadyToAttack = (ocean) => {
+  const expected = [
+    SHIP_TYPE.BATTLESHIP + '_' + 1,
+    SHIP_TYPE.CRUISER + '_' + 1,
+    SHIP_TYPE.CRUISER + '_' + 2,
+    SHIP_TYPE.DESTROYER + '_' + 1,
+    SHIP_TYPE.DESTROYER + '_' + 2,
+    SHIP_TYPE.DESTROYER + '_' + 3,
+    SHIP_TYPE.SUBMARINE + '_' + 1,
+    SHIP_TYPE.SUBMARINE + '_' + 2,
+    SHIP_TYPE.SUBMARINE + '_' + 3,
+    SHIP_TYPE.SUBMARINE + '_' + 4
+  ]
+  return _.isEqual(_.uniq(_.flatten(ocean)), expected)
+}
+
+export const isShipPlaced = (ocean, shipType, shipNumber) => (
+  _.flatten(ocean).indexOf(shipType + '_' + shipNumber) !== -1
 )
