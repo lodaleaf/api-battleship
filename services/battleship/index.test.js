@@ -1,4 +1,4 @@
-import { initOcean, putShip, isOccupied, getUnitSize } from './index'
+import { initOcean, putShip, isOccupied, getUnitSize, isSank } from './index'
 import { SHIP_DIRECTION, SHIP_TYPE } from '../../utils/constants'
 
 describe('initOcean', () => {
@@ -144,5 +144,21 @@ describe('getUnitSize', () => {
 
   it('should return 1 for battleship', () => {
     expect(getUnitSize(SHIP_TYPE.SUBMARINE)).toEqual(1)
+  })
+})
+
+describe('isSank', () => {
+  it('should return false', () => {
+    let emptyOcean = initOcean()
+    let shipType = SHIP_TYPE.BATTLE_SHIP
+    let shipDirection = SHIP_DIRECTION.VERTICAL
+
+    let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
+    expect(isSank(oneShipOcean, shipType)).toBeFalsy()
+  })
+
+  it('should return true', () => {
+    let emptyOcean = initOcean()
+    expect(isSank(emptyOcean, SHIP_TYPE.BATTLE_SHIP)).toBeTruthy()
   })
 })

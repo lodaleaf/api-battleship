@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import OceanModel from '../../schema/ocean'
+import { SHIP_DIRECTION, SHIP_TYPE, STATE } from '../../utils/constants'
 
 export const initOcean = () => {
   let ocean = Array.from(
@@ -33,13 +34,13 @@ export const createActiveOcean = async () => {
 
 export const getUnitSize = (shipType) => {
   switch (shipType) {
-    case 'BATTLE_SHIP':
+    case SHIP_TYPE.BATTLE_SHIP:
       return 4
-    case 'CRUISER':
+    case SHIP_TYPE.CRUISER:
       return 3
-    case 'DESTROYER':
+    case SHIP_TYPE.DESTROYER:
       return 2
-    case 'SUBMARINE':
+    case SHIP_TYPE.SUBMARINE:
       return 1
   }
 }
@@ -76,7 +77,7 @@ export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection
   for (let i = 0; i < unitSize; i++) {
     let toPutCoordinateX = coordinateX
     let toPutCoordinateY = coordinateY
-    if (shipDirection === 'VERTICAL') {
+    if (shipDirection === SHIP_DIRECTION.VERTICAL) {
       toPutCoordinateY += i
     } else {
       toPutCoordinateX += i
@@ -95,6 +96,24 @@ export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection
   return afterAddedOcean
 }
 
-export const attack = (coordinate) => {
+export const attack = async (coordinateX, coordinateY) => {
+  let activeOcrean = await getOrCreateActiveOcean()
+  let attackStatus = ''
+  const oceanData = _.cloneDeep(activeOcrean.ocean_data)
+  if (!_.isNil(oceanData[coordinateY][coordinateX])) {
+    let shipType = oceanData[coordinateY][coordinateX]
+    oceanData[coordinateY][coordinateX] = STATE.HIT
+    attackStatus = STATE.HIT
 
+    if (isSank(oceanData, shipType)) {
+      attackStatus = STATE.SANK
+    }
+  }
+  activeOcrean.ocean_data = oceanData
+  await activeOcrean.save()
+  return attackStatus
 }
+
+export const isSank = (ocean, shipType) => (
+  _.flatten(ocean).indexOf(shipType) === -1
+)

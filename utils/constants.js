@@ -9,3 +9,8 @@ export const SHIP_DIRECTION = {
   VERTICAL: 'VERTICAL',
   HORIZONTAL: 'HORIZONTAL'
 }
+
+export const STATE = {
+  HIT: 'HIT',
+  SANK: 'SANK'
+}
