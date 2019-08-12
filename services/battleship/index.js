@@ -138,6 +138,10 @@ export const attack = async (coordinateX, coordinateY) => {
     if (isSank(oceanData, shipType, shipNumber)) {
       attackStatus = STATE.SANK
     }
+
+    if (isWin(oceanData)) {
+      attackStatus = STATE.WIN
+    }
   }
   activeOcrean.ocean_data = oceanData
   activeOcrean.tries--
@@ -173,3 +177,12 @@ export const isReadyToAttack = (ocean) => {
 export const isShipPlaced = (ocean, shipType, shipNumber) => (
   _.flatten(ocean).indexOf(shipType + '_' + shipNumber) !== -1
 )
+
+export const isWin = (ocean) => {
+  const allStates = _.compact(
+    _.uniq(
+      _.flatten(ocean)
+    )
+  )
+  return allStates.length === 1 && allStates[0] === STATE.HIT
+}

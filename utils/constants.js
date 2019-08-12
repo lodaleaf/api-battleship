@@ -12,5 +12,6 @@ export const SHIP_DIRECTION = {
 
 export const STATE = {
   HIT: 'HIT',
-  SANK: 'SANK'
+  SANK: 'SANK',
+  WIN: 'WIN'
 }

@@ -74,7 +74,6 @@ describe('controllers', () => {
   })
 
   describe('attack', () => {
-
     const prepareBattleField = async () => {
       await placeShip({
         shipType: SHIP_TYPE.BATTLESHIP,
@@ -151,11 +150,20 @@ describe('controllers', () => {
 
     it('should return WIN', async () => {
       await prepareBattleField()
-      const attackBody = {
-        coordinateX: 0,
-        coordinateY: 0
+      const attacks = [
+        [0, 0], [1, 0], [2, 0], [3, 0], [5, 0], [6, 0], [7, 0],
+        [0, 2], [1, 2], [2, 2], [5, 2], [6, 2],
+        [0, 4], [1, 4], [3, 4], [4, 4],
+        [0, 6], [2, 6], [4, 6], [6, 6]
+      ]
+
+      let response
+      for (let attackData of attacks) {
+        response = await attack({
+          coordinateX: attackData[0],
+          coordinateY: attackData[1]
+        })
       }
-      const response = await attack(attackBody)
       expect(response.text).toEqual('WIN')
     })
 
