@@ -54,6 +54,8 @@ export const isOccupied = (ocean, coordinateX, coordinateY) => {
 }
 
 export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection) => {
+  const beforeAddedOcean = _.cloneDeep(ocean)
+  const afterAddedOcean = _.cloneDeep(ocean)
   const unitSize = getUnitSize(shipType)
   for (let i = 0; i < unitSize; i++) {
     let toPutCoordinateX = coordinateX
@@ -68,13 +70,13 @@ export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection
       throw (new Error('There is no space left'))
     }
 
-    if (ocean[toPutCoordinateY][toPutCoordinateX] === undefined) {
-      ocean[toPutCoordinateY][toPutCoordinateX] = shipType
-    } else {
+    if (isOccupied(beforeAddedOcean, toPutCoordinateX, toPutCoordinateY)) {
       throw (new Error('This location is occupied'))
     }
+
+    afterAddedOcean[toPutCoordinateY][toPutCoordinateX] = shipType
   }
-  return ocean
+  return afterAddedOcean
 }
 
 export const attack = (coordinate) => {
