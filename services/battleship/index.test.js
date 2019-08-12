@@ -115,7 +115,7 @@ describe('isOccupied', () => {
     let shipDirection = 'VERTICAL'
 
     let oneShipOcean = putShip(emptyOcean, shipType, 0, 0, shipDirection)
-    expect(isOccupied(oneShipOcean, 9, 9)).toBeTruthy()
+    expect(isOccupied(oneShipOcean, 9, 9)).toBeFalsy()
   })
 
   it('should return false', () => {
