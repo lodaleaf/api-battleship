@@ -26,7 +26,8 @@ export const createActiveOcean = async () => {
   let newOceanData = initOcean()
   let newOcean = new OceanModel({
     ocean_data: newOceanData,
-    active: true
+    active: true,
+    ready_to_attack: false
   })
   await newOcean.save()
   return newOcean
@@ -43,6 +44,32 @@ export const getUnitSize = (shipType) => {
     case SHIP_TYPE.SUBMARINE:
       return 1
   }
+}
+
+export const getUnitAmount = (shipType) => {
+  switch (shipType) {
+    case SHIP_TYPE.BATTLESHIP:
+      return 1
+    case SHIP_TYPE.CRUISER:
+      return 2
+    case SHIP_TYPE.DESTROYER:
+      return 3
+    case SHIP_TYPE.SUBMARINE:
+      return 4
+  }
+}
+
+export const checkAndGetShipNumber = (ocean, shipType) => {
+  const unitAmount = getUnitAmount(shipType)
+  let shipNumber = 1
+  while (unitAmount >= shipNumber) {
+    if (isShipPlaced(ocean, shipType, shipNumber)) {
+      shipNumber++
+    } else {
+      return shipNumber
+    }
+  }
+  throw Error('Number of ship exceeds')
 }
 
 export const getSaftyCoodinate = (coordinate) => {
@@ -74,6 +101,7 @@ export const putShip = (ocean, shipType, coordinateX, coordinateY, shipDirection
   const beforeAddedOcean = _.cloneDeep(ocean)
   const afterAddedOcean = _.cloneDeep(ocean)
   const unitSize = getUnitSize(shipType)
+  shipNumber = checkAndGetShipNumber(ocean, shipType)
   for (let i = 0; i < unitSize; i++) {
     let toPutCoordinateX = coordinateX
     let toPutCoordinateY = coordinateY
@@ -132,7 +160,12 @@ export const isReadyToAttack = (ocean) => {
     SHIP_TYPE.SUBMARINE + '_' + 3,
     SHIP_TYPE.SUBMARINE + '_' + 4
   ]
-  return _.isEqual(_.uniq(_.flatten(ocean)), expected)
+  return _.isEqual(
+    _.compact(
+      _.uniq(
+        _.flatten(ocean)
+      )
+    ), expected)
 }
 
 export const isShipPlaced = (ocean, shipType, shipNumber) => (

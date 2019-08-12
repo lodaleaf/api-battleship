@@ -29,9 +29,22 @@ describe('controllers', () => {
       expect(response.text).toEqual('Placed')
     })
 
-    it('should return bad request', async () => {
+    it('should return bad request since ship amount exceeds', async () => {
       const reqBody = {
         shipType: SHIP_TYPE.BATTLESHIP,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 0,
+        coordinateY: 0
+      }
+
+      await placeShip(reqBody)
+      const response = await placeShip(reqBody)
+      expect(response.text).toEqual('Number of ship exceeds')
+    })
+
+    it('should return bad request since it is occupied', async () => {
+      const reqBody = {
+        shipType: SHIP_TYPE.CRUISER,
         shipDirection: SHIP_DIRECTION.HORIZONTAL,
         coordinateX: 0,
         coordinateY: 0
@@ -61,33 +74,83 @@ describe('controllers', () => {
   })
 
   describe('attack', () => {
-    it('should return HIT', async () => {
-      const placeShipBody = {
+
+    const prepareBattleField = async () => {
+      await placeShip({
         shipType: SHIP_TYPE.BATTLESHIP,
         shipDirection: SHIP_DIRECTION.HORIZONTAL,
         coordinateX: 0,
         coordinateY: 0
-      }
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.CRUISER,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 5,
+        coordinateY: 0
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.CRUISER,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 0,
+        coordinateY: 2
+      })
 
+      await placeShip({
+        shipType: SHIP_TYPE.DESTROYER,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 5,
+        coordinateY: 2
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.DESTROYER,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 0,
+        coordinateY: 4
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.DESTROYER,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 3,
+        coordinateY: 4
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.SUBMARINE,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 0,
+        coordinateY: 6
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.SUBMARINE,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 2,
+        coordinateY: 6
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.SUBMARINE,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 4,
+        coordinateY: 6
+      })
+      await placeShip({
+        shipType: SHIP_TYPE.SUBMARINE,
+        shipDirection: SHIP_DIRECTION.HORIZONTAL,
+        coordinateX: 6,
+        coordinateY: 6
+      })
+    }
+
+    it('should return HIT', async () => {
+      await prepareBattleField()
       const attackBody = {
         coordinateX: 0,
         coordinateY: 0
       }
-
-      await placeShip(placeShipBody)
       const response = await attack(attackBody)
       expect(response.text).toEqual('HIT')
     })
 
     it('should return SANK', async () => {
-      const placeShipBody = {
-        shipType: SHIP_TYPE.BATTLESHIP,
-        shipDirection: SHIP_DIRECTION.HORIZONTAL,
-        coordinateX: 0,
-        coordinateY: 0
-      }
-
-      await placeShip(placeShipBody)
+      await prepareBattleField()
       await attack({
         coordinateX: 0,
         coordinateY: 0

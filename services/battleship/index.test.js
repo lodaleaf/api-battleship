@@ -166,16 +166,16 @@ describe('isSank', () => {
 describe('isReadyToAttack', () => {
   it('should return true', () => {
     const ocean = [
-      SHIP_TYPE.BATTLESHIP + '_' + 1,
-      SHIP_TYPE.CRUISER + '_' + 1,
-      SHIP_TYPE.CRUISER + '_' + 2,
-      SHIP_TYPE.DESTROYER + '_' + 1,
-      SHIP_TYPE.DESTROYER + '_' + 2,
-      SHIP_TYPE.DESTROYER + '_' + 3,
-      SHIP_TYPE.SUBMARINE + '_' + 1,
-      SHIP_TYPE.SUBMARINE + '_' + 2,
-      SHIP_TYPE.SUBMARINE + '_' + 3,
-      SHIP_TYPE.SUBMARINE + '_' + 4
+      ['BATTLESHIP_1', 'BATTLESHIP_1', 'BATTLESHIP_1', 'BATTLESHIP_1', null, 'CRUISER_1', 'CRUISER_1', 'CRUISER_1', null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      ['CRUISER_2', 'CRUISER_2', 'CRUISER_2', null, null, 'DESTROYER_1', 'DESTROYER_1', null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      ['DESTROYER_2', 'DESTROYER_2', null, 'DESTROYER_3', 'DESTROYER_3', null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      ['SUBMARINE_1', null, 'SUBMARINE_2', null, 'SUBMARINE_3', null, 'SUBMARINE_4', null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null],
+      [null, null, null, null, null, null, null, null, null, null]
     ]
     expect(isReadyToAttack(ocean)).toBeTruthy()
   })
@@ -194,5 +194,4 @@ describe('isReadyToAttack', () => {
     ]
     expect(isReadyToAttack(ocean)).toBeFalsy()
   })
-
 })

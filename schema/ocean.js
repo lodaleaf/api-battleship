@@ -4,6 +4,7 @@ const oceanSchema = new mongoose.Schema({
   attack_history: [{ coordinateX: Number, coordinateY: Number, date: Date }],
   defender_history: [{ shipType: String, shipDirection: String, coordinateX: Number, coordinateY: Number, date: Date }],
   ocean_data: Object,
+  ready_to_attack: Boolean,
   active: Boolean
 })
 

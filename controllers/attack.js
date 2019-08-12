@@ -6,7 +6,7 @@ export const attack = async (req, res) => {
     const coordinateY = req.body.coordinateY
 
     const activeOcean = await getOrCreateActiveOcean()
-    if (!isReadyToAttack(activeOcean)) {
+    if (!activeOcean.ready_to_attack) {
       throw (new Error('Please place all ships'))
     }
     const attackStatus = await attackService(coordinateX, coordinateY)

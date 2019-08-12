@@ -1,4 +1,4 @@
-import { putShip, getOrCreateActiveOcean } from '../services/battleship'
+import { putShip, getOrCreateActiveOcean, isReadyToAttack } from '../services/battleship'
 
 export const placeShip = async (req, res) => {
   try {
@@ -9,6 +9,9 @@ export const placeShip = async (req, res) => {
 
     let activeOcean = await getOrCreateActiveOcean()
     activeOcean.ocean_data = putShip(activeOcean.ocean_data, shipType, coordinateX, coordinateY, shipDirection)
+    if (isReadyToAttack(activeOcean.ocean_data)) {
+      activeOcean.ready_to_attack = true
+    }
     await activeOcean.save()
     return res.send('Placed')
   } catch (e) {
